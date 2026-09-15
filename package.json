@@ -1,0 +1,25 @@
+{
+  "name": "movie-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "start /B tsc -w & nodemon dist/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@prisma/client": "^6.4.1",
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "dotenv": "^17.4.2",
+    "nodemon": "^3.1.14",
+    "prisma": "^6.4.1",
+    "typescript": "^7.0.2"
+  }
+}
