@@ -5,6 +5,9 @@ import type { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import { prisma } from "../config/db.js";
 
+// Utils
+import { generateToken } from "../utils/generateToken.js";
+
 export default class AuthController {
     static async register(req: Request, res: Response) {
         const { name, email, password }: { 
@@ -28,17 +31,68 @@ export default class AuthController {
         const hashedPassword = await bcrypt.hash(password, salt);
 
         // Create the user
-        const user = await prisma.user.create({ data: {
+        const newUser = await prisma.user.create({ data: {
             name,
             email,
             password: hashedPassword
         }});
 
+        const token = generateToken(newUser.id, res);
+
         res
         .status(201)
         .json({
             status: "success",
-            data: { user }
+            data: { 
+                user: {
+                    id: newUser.id,
+                    name: newUser.name,
+                    email: newUser.email
+                },
+                token
+            }
+         });
+    }
+
+    static async login(req: Request, res: Response) {
+        const ERROR_MESSAGE = "Email address or password is incorrect.";
+
+        const { email, password }: { 
+            email: string; 
+            password: string 
+        } = req.body;
+
+        const existingUser = await prisma.user.findUnique({ 
+            where: { email }
+        });
+
+        if (!existingUser) {
+            return res
+                    .status(401)
+                    .json({ error: ERROR_MESSAGE});
+        }
+
+        const isPasswordCorrect = await bcrypt.compare(password, existingUser.password);
+
+        if (!isPasswordCorrect) {
+            return res
+                    .status(401)
+                    .json({ error: ERROR_MESSAGE });
+        }
+
+        const token = generateToken(existingUser.id, res);
+
+        res
+        .status(201)
+        .json({
+            status: "success",
+            data: { 
+                user: {
+                    id: existingUser.id,
+                    email: existingUser.email
+                },
+                token
+            }
          });
     }
 }
