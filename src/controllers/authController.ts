@@ -16,6 +16,7 @@ export default class AuthController {
             password: string 
         } = req.body;
 
+        // Check if the email address is in use
         const existingUser = await prisma.user.findUnique({ 
             where: { email }
         });
@@ -62,6 +63,7 @@ export default class AuthController {
             password: string 
         } = req.body;
 
+        // Check if an account with the provided email address exists
         const existingUser = await prisma.user.findUnique({ 
             where: { email }
         });
@@ -72,6 +74,7 @@ export default class AuthController {
                     .json({ error: ERROR_MESSAGE});
         }
 
+        // Check if the password supplied is the correct password
         const isPasswordCorrect = await bcrypt.compare(password, existingUser.password);
 
         if (!isPasswordCorrect) {
@@ -80,6 +83,7 @@ export default class AuthController {
                     .json({ error: ERROR_MESSAGE });
         }
 
+        // Generate a JSON Web Token for the client
         const token = generateToken(existingUser.id, res);
 
         res
@@ -97,6 +101,7 @@ export default class AuthController {
     }
 
     static async logout(req: Request, res: Response) {
+        // Delete any potential JWT for the client
         res.cookie("jwt", "", {
             httpOnly: true,
             expires: new Date(0)
