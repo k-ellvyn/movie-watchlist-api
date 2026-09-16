@@ -3,7 +3,7 @@ import { config } from "dotenv";
 import { connectDb, disconnectDb } from "./config/db.js";
 
 // Routers
-// import authRouter from "./routes/authRoutes.js";
+import authRouter from "./routes/authRoutes.js";
 
 // .env loader
 config();
@@ -13,7 +13,12 @@ connectDb();
 const PORT = 3000;
 const app = express();
 
-// app.use("/auth", authRouter);
+// Middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }))
+
+// Router setup
+app.use("/auth", authRouter);
 
 const server = app.listen(PORT, () => {
     console.log(`Running locally on http://localhost:${PORT}`);
