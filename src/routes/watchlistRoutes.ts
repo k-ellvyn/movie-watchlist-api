@@ -10,6 +10,7 @@ const router = Router();
 
 router.use(authMiddleware);
 
-router.post("/", WatchlistController.addToWatchlist);
+router.post("/:movieId", WatchlistController.addToWatchlist);
+router.delete("/:id", WatchlistController.removeFromWatchlist);
 
 export default router;
