@@ -48,6 +48,7 @@ model WatchlistItem {
   status    WatchlistStatus @default(PLANNED)
   rating    Int?
   notes     String?
+  @@unique([userId, movieId])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())

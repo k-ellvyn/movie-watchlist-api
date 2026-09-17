@@ -4,6 +4,7 @@ import { connectDb, disconnectDb } from "./config/db.js";
 
 // Routers
 import authRouter from "./routes/authRoutes.js";
+import watchlistRouter from "./routes/watchlistRoutes.js";
 
 // .env loader
 config();
@@ -17,8 +18,9 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
 
-// Router setup
+// Routing
 app.use("/auth", authRouter);
+app.use("/watchlist", watchlistRouter);
 
 const server = app.listen(PORT, () => {
     console.log(`Running locally on http://localhost:${PORT}`);
