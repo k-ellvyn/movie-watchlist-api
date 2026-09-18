@@ -22,9 +22,9 @@ export default class AuthController {
         });
         
         if (existingUser) {
-            return res
-                    .status(400)
-                    .json({ error: "A user already exists with this email address." });
+            return res.status(400).json({ 
+                error: "A user already exists with this email address." 
+            });
         }
 
         // Hash Password
@@ -40,9 +40,7 @@ export default class AuthController {
 
         const token = generateToken(newUser.id, res);
 
-        res
-        .status(201)
-        .json({
+        res.status(201).json({
             status: "success",
             data: { 
                 user: {
@@ -69,26 +67,24 @@ export default class AuthController {
         });
 
         if (!existingUser) {
-            return res
-                    .status(401)
-                    .json({ error: ERROR_MESSAGE});
+            return res.status(401).json({ 
+                error: ERROR_MESSAGE
+            });
         }
 
         // Check if the password supplied is the correct password
         const isPasswordCorrect = await bcrypt.compare(password, existingUser.password);
 
         if (!isPasswordCorrect) {
-            return res
-                    .status(401)
-                    .json({ error: ERROR_MESSAGE });
+            return res.status(401).json({ 
+                error: ERROR_MESSAGE 
+            });
         }
 
         // Generate a JSON Web Token for the client
         const token = generateToken(existingUser.id, res);
 
-        res
-        .status(201)
-        .json({
+        res.status(201).json({
             status: "success",
             data: { 
                 user: {
@@ -107,9 +103,7 @@ export default class AuthController {
             expires: new Date(0)
         });
 
-        res
-        .status(200)
-        .json({
+        res.status(200).json({
             status: "success",
             message: "Successfully logged out!"
         });
