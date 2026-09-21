@@ -25,7 +25,7 @@ app.use("/movies", movieRouter);
 app.use("/watchlist", watchlistRouter);
 
 const server = app.listen(PORT, () => {
-    console.log(`Running locally on http://localhost:${PORT}`);
+    console.log(`Running on port ${PORT}`);
 });
 
 // Handle unhandled rejections
