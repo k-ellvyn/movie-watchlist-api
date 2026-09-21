@@ -14,6 +14,8 @@ const router = Router();
 
 router.use(authMiddleware);
 
+router.get("/", WatchlistController.getWatchlist);
+router.get("/:id", WatchlistController.getWatchlistItemById);
 router.post(
     "/", 
     validationMiddleware(addToWatchlistSchema), 

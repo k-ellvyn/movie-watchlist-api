@@ -6,6 +6,53 @@ import { WatchlistStatus } from "@prisma/client";
 import { prisma } from "../config/db.js";
 
 export default class WatchlistController {
+    static async getWatchlist(req: Request, res: Response) {
+        const userId = req.user?.id as string;
+
+        const watchlistItems = await prisma.watchlistItem.findMany({
+            where: { userId },
+            include: {
+                movie: true
+            },
+            orderBy: {
+                createdAt: "desc"
+            }
+        });
+
+        res.status(200).json({
+            status: "success",
+            data: { watchlistItems }
+        });
+    }
+
+    static async getWatchlistItemById(req: Request<{ id: string }>, res: Response) {
+        const { id } = req.params;
+
+        const watchlistItem = await prisma.watchlistItem.findUnique({
+            where: { id },
+            include: {
+                movie: true
+            }
+        });
+
+        if (!watchlistItem) {
+            return res.status(404).json({
+                error: "Watchlist item does not exist."
+            });
+        }
+
+        if (watchlistItem.userId !== req.user?.id) {
+            return res.status(403).json({
+                error: "Watchlist item does not belong to user."
+            });
+        }
+
+        res.status(200).json({
+            status: "success",
+            data: { watchlistItem }
+        });
+    }
+
     static async addToWatchlist(req: Request, res: Response) {
         const { movieId, status, rating, notes }: {
             movieId: string,
@@ -45,7 +92,7 @@ export default class WatchlistController {
             data: {
                 userId,
                 movieId,
-                watchlistStatus: status as WatchlistStatus,
+                status: status as WatchlistStatus,
                 rating,
                 notes
             }
