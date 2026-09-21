@@ -5,6 +5,9 @@
   "main": "index.js",
   "scripts": {
     "dev": "start /B tsc -w & nodemon dist/server.js",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "postinstall": "prisma generate",
     "seed:movies": "node prisma/seed.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
