@@ -24,9 +24,9 @@ const authMiddleware = async (req: Request, res: Response, next: NextFunction) =
     }
 
     if (token.length === 0) {
-        return res
-            .status(401)
-            .json({ error: "Not authorized." });
+        return res.status(401).json({ 
+            error: "Not authorized." 
+        });
     }
 
     try {
@@ -37,9 +37,9 @@ const authMiddleware = async (req: Request, res: Response, next: NextFunction) =
         });
 
         if (!user) {
-            return res
-                .status(401)
-                .json({ error: "User does not exist." });
+            return res.status(401).json({ 
+                error: "User does not exist." 
+            });
         }
 
         req.user = user;
@@ -47,9 +47,9 @@ const authMiddleware = async (req: Request, res: Response, next: NextFunction) =
         next();
     }
     catch (err) {
-        return res
-            .status(401)
-            .json({ error: "Not authorized." });
+        return res.status(401).json({ 
+            error: "Not authorized." 
+        });
     }
 };
 

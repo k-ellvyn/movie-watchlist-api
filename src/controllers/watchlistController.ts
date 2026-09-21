@@ -61,8 +61,6 @@ export default class WatchlistController {
     static async updateWatchlistItem(req: Request<{id: string}>, res: Response) {
         const { id } = req.params;
 
-        const userId = req.user?.id as string;
-
         // Get the watchlist item
         const watchlistItem = await prisma.watchlistItem.findUnique({
             where: { id }
@@ -82,16 +80,17 @@ export default class WatchlistController {
             });
         }
 
-        const { status, notes, rating }: {
+        const { status, rating, notes }: {
             status: string,
-            notes: string,
             rating: number
+            notes: string,
+            
         } = req.body;
 
         const updateData: {
             status?: WatchlistStatus,
+            rating?: number,
             notes?: string,
-            rating?: number
         } = {};
 
         if (status !== undefined) {
@@ -120,8 +119,6 @@ export default class WatchlistController {
 
     static async removeFromWatchlist(req: Request<{ id: string }>, res: Response) {
         const { id } = req.params;
-
-        const userId = req.user?.id as string;
 
         // Get the watchlist item
         const watchlistItem = await prisma.watchlistItem.findUnique({
